@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Livewire\Users\Index as UserIndex;
+use App\Livewire\Users\Create as UserCreate;
+use App\Livewire\Users\Edit as UserEdit;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,6 +20,12 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users', UserIndex::class)->name('users.index');
+    Route::get('/users/create', UserCreate::class)->name('users.create');
+    Route::get('/users/{id}/edit', UserEdit::class)->name('users.edit');
 });
 
 require __DIR__.'/auth.php';

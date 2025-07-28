@@ -29,7 +29,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        if (!Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -48,7 +48,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     protected function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -69,7 +69,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }; ?>
 
@@ -81,42 +81,81 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     <form wire:submit="login" class="flex flex-col gap-6">
         <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
-            required
-            autofocus
-            autocomplete="email"
-            placeholder="email@example.com"
-        />
+        <div class="form-control w-full">
+            <label class="label mb-1">
+                <span class="label-text text-sm text-zinc-800 ">
+                    {{ __('Email address') }}
+                </span>
+            </label>
+            <input type="email" wire:model="email" placeholder="email@example.com" required autofocus
+                autocomplete="email"
+                class="input input-bordered w-full bg-white text-black placeholder-gray-500 border-gray-300
+                   focus:border-primary-500 focus:ring-primary-500
+                   disabled:bg-gray-100 disabled:text-gray-400" />
+        </div>
 
         <!-- Password -->
-        <div class="relative">
-            <flux:input
-                wire:model="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="current-password"
-                :placeholder="__('Password')"
-                viewable
-            />
+        @php $showPassword = false; @endphp
+
+        <div class="form-control w-full relative" x-data="{ show: false }">
+            <label class="label mb-1">
+                <span class="label-text text-sm text-zinc-800">
+                    {{ __('Password') }}
+                </span>
+            </label>
+
+            <div class="relative">
+                <input :type="show ? 'text' : 'password'" wire:model="password" placeholder="{{ __('Password') }}"
+                    required autocomplete="current-password"
+                    class="input input-bordered w-full bg-white text-black placeholder-gray-500 border-gray-300
+                   focus:border-primary-500 focus:ring-primary-500
+                   disabled:bg-gray-100 disabled:text-gray-400 pr-10" />
+
+                <button type="button" @click="show = !show"
+                    class="absolute top-1/2 right-3 -translate-y-1/2 text-zinc-500 hover:text-zinc-800" tabindex="-1">
+                    <!-- Hidden when 'show' is true -->
+                    <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+
+                    <!-- Shown when 'show' is true -->
+                    <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a10.046 10.046 0 012.042-3.368M9.88 9.88a3 3 0 104.24 4.24m1.422-6.662A9.965 9.965 0 0112 5c-1.318 0-2.577.254-3.737.712M3 3l18 18" />
+                    </svg>
+                </button>
+            </div>
 
             @if (Route::has('password.request'))
-                <flux:link class="absolute end-0 top-0 text-sm" :href="route('password.request')" wire:navigate>
+                <a href="{{ route('password.request') }}"
+                    class="absolute end-0 -bottom-6 text-sm text-zinc-600 hover:underline" wire:navigate>
                     {{ __('Forgot your password?') }}
-                </flux:link>
+                </a>
             @endif
         </div>
 
-        <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" :label="__('Remember me')" />
 
+        <!-- Remember Me -->
+        <div class="form-control">
+            <label class="cursor-pointer label">
+                <input type="checkbox" wire:model="remember" class="checkbox checkbox-primary me-2" />
+                <span class="label-text text-sm text-zinc-800">{{ __('Remember me') }}</span>
+            </label>
+        </div>
+
+        <!-- Submit Button -->
         <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full">{{ __('Log in') }}</flux:button>
+            <button type="submit" class="btn btn-primary w-full">
+                {{ __('Log in') }}
+            </button>
         </div>
     </form>
+
 
     @if (Route::has('register'))
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600">

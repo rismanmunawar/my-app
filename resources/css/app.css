@@ -3,5 +3,19 @@
 @tailwind utilities;
 
 [x-cloak] {
-    display: none;
+  display: none;
+}
+
+@layer base {
+  html {
+    font-size: 14.4px; /* optional scaling */
+  }
+
+  body {
+    font-size: 0.9rem;
+  }
+}
+
+.label-text {
+  @apply text-black dark:text-black;
 }
