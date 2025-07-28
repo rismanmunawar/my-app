@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ config('app.name', 'Portal') }}</title>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {{-- <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script> --}}
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -27,7 +27,7 @@
                                 d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </label>
-                    <a class="btn btn-ghost text-xl normal-case">daisyUI</a>
+                    {{-- <a class="btn btn-ghost text-xl normal-case text-center">daisyUI</a> --}}
                 </div>
                 <div class="flex gap-2">
                     <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
@@ -78,67 +78,119 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="drawer-side bg-base-200">
+        <div class="drawer-side lg:bg-base-200 bg-base-200/90 backdrop-blur-sm">
             <label for="sidebar-drawer" class="drawer-overlay"></label>
             <aside class="menu p-4 w-60 min-h-screen flex flex-col">
                 <h1 class="text-2xl font-bold mb-6">Portal</h1>
                 <ul class="flex-grow space-y-2">
+                    {{-- Home --}}
                     <li>
-                        <a href="/dashboard" class="flex items-center gap-3 rounded-md hover:bg-base-300 px-3 py-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current" fill="none"
-                                viewBox="0 0 24 24">
+                        <a href="{{ route('home') }}"
+                            class="flex items-center gap-3 rounded-md px-3 py-2 transition-all
+        {{ request()->routeIs('home') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4" />
                             </svg>
-                            Dashboard
+                            Home
                         </a>
                     </li>
+
+                    {{-- Master Data --}}
                     <li>
-                        <a href="#" class="flex items-center gap-3 rounded-md hover:bg-base-300 px-3 py-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current" fill="none"
-                                viewBox="0 0 24 24">
+                        <a href="/master-data"
+                            class="flex items-center gap-3 rounded-md px-3 py-2 transition-all
+                   {{ request()->is('master-data*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4 6h16M4 10h16M4 14h10M4 18h10" />
                             </svg>
                             Master Data
                         </a>
                     </li>
+
+                    {{-- Monitoring --}}
                     <li>
-                        <a href="#" class="flex items-center gap-3 rounded-md hover:bg-base-300 px-3 py-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current" fill="none"
-                                viewBox="0 0 24 24">
+                        <a href="/monitoring"
+                            class="flex items-center gap-3 rounded-md px-3 py-2 transition-all
+                   {{ request()->is('monitoring*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m-6 0h6m-6 0a2 2 0 01-2-2v-6a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2" />
                             </svg>
                             Monitoring
                         </a>
                     </li>
+
+                    {{-- Guide --}}
                     <li>
-                        <a href="#" class="flex items-center gap-3 rounded-md hover:bg-base-300 px-3 py-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current" fill="none"
-                                viewBox="0 0 24 24">
+                        <a href="/guide"
+                            class="flex items-center gap-3 rounded-md px-3 py-2 transition-all
+                   {{ request()->is('guide*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M12 6v6l4 2m4-10H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" />
                             </svg>
                             Guide
                         </a>
                     </li>
+                    {{-- User Management --}}
                     <li>
-                        <a href="/users" class="flex items-center gap-3 rounded-md hover:bg-base-300 px-3 py-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 stroke-current" fill="none"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 20h5v-2a4 4 0 00-4-4h-1M7 20h10M4 20h3v-2a4 4 0 00-4-4H2m6-6a4 4 0 118 0 4 4 0 01-8 0z" />
-                            </svg>
-                            Users
-                        </a>
+                        <details
+                            {{ request()->routeIs('users.*') || request()->routeIs('roles.*') || request()->routeIs('permissions.*') ? 'open' : '' }}>
+                            <summary class="flex items-center gap-3 px-3 py-2 font-semibold">
+                                <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a4 4 0 00-4-4h-1M7 20h10M4 20h3v-2a4 4 0 00-4-4H2m6-6a4 4 0 118 0 4 4 0 01-8 0z" />
+                                </svg>
+                                Manajemen User
+                            </summary>
+                            <ul>
+                                {{-- Users --}}
+                                <li>
+                                    <a href="{{ route('users.index') }}"
+                                        class="flex items-center gap-3 px-4 py-2 rounded-md transition-all
+                    {{ request()->routeIs('users.*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                                        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M5.121 17.804A9.001 9.001 0 1118 20H6a1 1 0 01-.879-1.515z" />
+                                        </svg>
+                                        Users
+                                    </a>
+                                </li>
+
+                                {{-- Roles --}}
+                                <li>
+                                    <a href="{{ route('roles.index') }}"
+                                        class="flex items-center gap-3 px-4 py-2 rounded-md transition-all
+                    {{ request()->routeIs('roles.*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                                        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 17h4M8 13h4M16 11V5a1 1 0 00-1-1H5a1 1 0 00-1 1v6m12 0v10a1 1 0 01-1 1H5a1 1 0 01-1-1V11h12z" />
+                                        </svg>
+                                        Roles
+                                    </a>
+                                </li>
+
+                                {{-- Permissions --}}
+                                <li>
+                                    <a href="{{ route('permissions.index') }}"
+                                        class="flex items-center gap-3 px-4 py-2 rounded-md transition-all
+                    {{ request()->routeIs('permissions.*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                                        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        Permissions
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
                     </li>
                 </ul>
             </aside>
         </div>
-
     </div>
-
     @livewireScripts
 </body>
 
