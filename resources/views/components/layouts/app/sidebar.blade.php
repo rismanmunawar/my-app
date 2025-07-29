@@ -9,6 +9,11 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
     @stack('styles')
 </head>
 
@@ -118,6 +123,18 @@
                                     d="M19 11H5m14 0a2 2 0 100-4H5a2 2 0 100 4m14 0a2 2 0 100 4H5a2 2 0 100-4m14 0v6a2 2 0 01-2 2H7a2 2 0 01-2-2v-6" />
                             </svg>
                             Artikel Edukasi
+                        </a>
+                    </li>
+                    {{-- Dokumentasi --}}
+                    <li>
+                        <a href="{{ route('docs.manage') }}"
+                            class="flex items-center gap-3 px-4 py-2 rounded-md transition-all
+            {{ request()->is('docs/manage') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-current" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Dokumentasi
                         </a>
                     </li>
 

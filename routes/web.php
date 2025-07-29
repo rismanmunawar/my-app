@@ -17,6 +17,9 @@ use App\Livewire\Articles\Index as ArticleIndex;
 use App\Livewire\Articles\Create as ArticleCreate;
 use App\Livewire\Articles\Edit as ArticleEdit;
 use App\Livewire\Articles\Show as ArticleShow;
+use App\Livewire\Docs\Categories\Index as CategoryIndex;
+use App\Livewire\Docs\Subcategories\Index as SubcategoryIndex;
+use App\Livewire\Docs\Topics\Index as TopicIndex;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,7 +33,6 @@ Route::view('home', 'home')
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', Index::class)->name('home');
-
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -74,8 +76,29 @@ Route::post('/articles/upload-image', [ArticleImageUploadController::class, 'sto
     ->name('articles.upload-image');
 
 
+Route::get('/docs/manage', function () {
+    return view('livewire.docs.manage');
+})->name('docs.manage')->middleware(['auth']);
 
-require __DIR__.'/auth.php';
+
+Route::prefix('docs/categories')->name('docs.categories.')->group(function () {
+    Route::get('/', \App\Livewire\Docs\Categories\Index::class)->name('index');
+    Route::get('/create', \App\Livewire\Docs\Categories\Create::class)->name('create');
+    Route::get('/{category}/edit', \App\Livewire\Docs\Categories\Edit::class)->name('edit');
+});
+
+Route::middleware(['auth'])->prefix('docs')->name('docs.')->group(function () {
+    Route::get('/categories', CategoryIndex::class)->name('categories');
+    Route::get('/subcategories', SubcategoryIndex::class)->name('subcategories');
+    Route::get('/topics', TopicIndex::class)->name('topics');
+});
+Route::prefix('docs/topics')->name('docs.topics.')->group(function () {
+    Route::get('/', \App\Livewire\Docs\Topics\Index::class)->name('index');
+    Route::get('/create', \App\Livewire\Docs\Topics\Create::class)->name('create');
+    Route::get('/{topic}/edit', \App\Livewire\Docs\Topics\Edit::class)->name('edit');
+});
+
+require __DIR__ . '/auth.php';
 
 Route::middleware([
     'auth:sanctum',
