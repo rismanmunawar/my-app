@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Livewire\Permissions;
 
 use Livewire\Component;
@@ -10,18 +9,27 @@ class Index extends Component
 {
     use WithPagination;
 
+    public $search = '';
+
+    protected $paginationTheme = 'tailwind';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     public function delete($id)
     {
-        $permission = Permission::findOrFail($id);
-        $permission->delete();
-
+        Permission::findOrFail($id)->delete();
         session()->flash('success', 'Permission berhasil dihapus.');
     }
 
     public function render()
     {
-        return view('livewire.permissions.index', [
-            'permissions' => Permission::latest()->paginate(10),
-        ]);
+        $permissions = Permission::where('name', 'like', '%' . $this->search . '%')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('livewire.permissions.index', compact('permissions'));
     }
 }

@@ -1,74 +1,68 @@
 <div class="p-4 bg-white text-black rounded-lg shadow">
-    <div class="flex justify-between items-center mb-4">
+    {{-- Header + Search --}}
+    <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <h2 class="text-xl font-bold">Daftar Permission</h2>
-        <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-sm inline-flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-            Tambah Permission
-        </a>
+        <div class="flex gap-2 items-center w-full md:w-auto">
+            <input wire:model.debounce.500ms="search" type="text" placeholder="Cari permission..."
+                class="input input-bordered input-sm w-full md:w-64 border-gray-300 rounded bg-white text-black" />
+            @can('add.permissions')
+                <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-sm inline-flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah Permission
+                </a>
+            @endcan
+        </div>
     </div>
 
-    {{-- ALERT SECTION --}}
-    @if (session('success') || session('error'))
-        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 3000)" x-show="show" x-transition>
-            <div class="alert shadow-lg mb-4 {{ session('success') ? 'alert-success' : 'alert-error' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
-                    viewBox="0 0 24 24">
-                    @if (session('success'))
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    @else
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    @endif
-                </svg>
-                <span>{{ session('success') ?? session('error') }}</span>
-            </div>
-        </div>
+    {{-- Success Alert --}}
+    @if (session()->has('success'))
+        <div class="alert alert-success mb-4">{{ session('success') }}</div>
     @endif
 
-    {{-- TABLE SECTION --}}
-    <div class="mt-6 overflow-x-auto">
+    {{-- Table --}}
+    <div class="overflow-x-auto">
         <table class="table text-black bg-white border border-gray-200 w-full">
             <thead class="bg-gray-100 text-black">
                 <tr>
                     <th class="px-4 py-2">#</th>
-                    <th class="px-4 py-2">Nama Permission</th>
+                    <th class="px-4 py-2">Nama</th>
                     <th class="px-4 py-2">Dibuat</th>
-                    <th class="px-4 py-2">Aksi</th>
+                    @can('delete.permissions')
+                        <th class="px-4 py-2">Aksi</th>
+                    @endcan
                 </tr>
             </thead>
             <tbody>
-                @forelse ($permissions as $index => $permission)
+                @forelse ($permissions as $i => $permission)
                     <tr class="border-b hover:bg-gray-50 transition">
-                        <td class="px-4 py-2">{{ $permissions->firstItem() + $index }}</td>
+                        <td class="px-4 py-2">{{ $permissions->firstItem() + $i }}</td>
                         <td class="px-4 py-2">{{ $permission->name }}</td>
-                        <td class="px-4 py-2">{{ $permission->created_at?->format('d M Y') }}</td>
-                        <td class="px-4 py-2">
-                            <div class="flex gap-2">
-                                <a href="{{ route('permissions.edit', $permission->id) }}"
-                                    class="btn btn-xs btn-warning">Edit</a>
-                                <button
-                                    onclick="confirm('Yakin ingin menghapus permission ini?') || event.stopImmediatePropagation()"
-                                    wire:click="delete({{ $permission->id }})" class="btn btn-xs btn-outline btn-error">
-                                    Hapus
-                                </button>
-                            </div>
-                        </td>
+                        <td class="px-4 py-2">{{ $permission->created_at->format('d M Y') }}</td>
+                        @can('delete.permissions')
+                            <td class="px-4 py-2">
+                                <div class="flex gap-2">
+                                    <a href="{{ route('permissions.edit', $permission->id) }}"
+                                        class="btn btn-xs btn-warning">Edit</a>
+                                    <button wire:click="delete({{ $permission->id }})"
+                                        class="btn btn-xs btn-outline btn-error">Hapus</button>
+                                </div>
+                            </td>
+                        @endcan
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center text-gray-500 py-4">Belum ada permission.</td>
+                        <td colspan="4" class="text-center text-gray-500 py-4">Tidak ada permission ditemukan.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
 
-        {{-- PAGINATION --}}
+        {{-- Pagination --}}
         <div class="mt-4">
-            @include('vendor.livewire.daisy-pagination', ['paginator' => $permissions])
+            {{ $permissions->links() }}
         </div>
     </div>
 </div>

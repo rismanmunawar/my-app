@@ -14,8 +14,17 @@
         <div class="form-control w-full">
             <label class="block text-sm font-medium mb-1 text-black">Nama Permission</label>
             <input type="text" wire:model.defer="name"
-                class="input w-full border border-gray-300 bg-white text-black" placeholder="Misal: view_users" />
+                class="input w-full border border-gray-300 bg-white text-black" placeholder="Misal: view.users" />
             @error('name')
+                <span class="text-sm text-red-500 mt-1">{{ $message }}</span>
+            @enderror
+        </div>
+
+        <div class="form-control w-full">
+            <label class="block text-sm font-medium mb-1 text-black">Nama Tampilan (Opsional)</label>
+            <input type="text" wire:model.defer="display_name"
+                class="input w-full border border-gray-300 bg-white text-black" placeholder="Misal: Tampil Data User" />
+            @error('display_name')
                 <span class="text-sm text-red-500 mt-1">{{ $message }}</span>
             @enderror
         </div>
@@ -25,4 +34,5 @@
             <button type="submit" class="btn btn-primary">Simpan</button>
         </div>
     </form>
+
 </div>

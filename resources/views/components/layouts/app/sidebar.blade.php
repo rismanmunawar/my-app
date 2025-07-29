@@ -18,7 +18,8 @@
         <div class="drawer-content flex flex-col min-h-screen">
 
             <!-- Navbar -->
-            <nav class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+            <nav class="navbar bg-base-100 shadow-sm sticky top-0 z-50 min-h-[4.5rem]">
+
                 <div class="flex-1">
                     <label for="sidebar-drawer" class="btn btn-ghost lg:hidden">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -42,10 +43,21 @@
                         </div>
                     </button>
                     <div class="dropdown dropdown-end">
-                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                            <div class="w-10 rounded-full">
-                                <img alt="User"
-                                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                        <div tabindex="0" role="button"
+                            class="flex items-center gap-3 btn btn-ghost px-3 py-2 rounded-lg transition-all hover:bg-white hover:text-black">
+                            <div class="p-1 bg-base-100 rounded-full">
+                                <div class="w-9 h-9 rounded-full overflow-hidden">
+                                    <img alt="User"
+                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                                </div>
+                            </div>
+                            <div class="hidden lg:block text-left">
+                                <div class="text-sm font-medium">
+                                    {{ Auth::user()->name }}
+                                </div>
+                                <div class="text-xs text-gray-500">
+                                    {{ Auth::user()->email }}
+                                </div>
                             </div>
                         </div>
                         <ul tabindex="0"
@@ -96,44 +108,6 @@
                         </a>
                     </li>
 
-                    {{-- Master Data --}}
-                    <li>
-                        <a href="/master-data"
-                            class="flex items-center gap-3 rounded-md px-3 py-2 transition-all
-                   {{ request()->is('master-data*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
-                            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6h16M4 10h16M4 14h10M4 18h10" />
-                            </svg>
-                            Master Data
-                        </a>
-                    </li>
-
-                    {{-- Monitoring --}}
-                    <li>
-                        <a href="/monitoring"
-                            class="flex items-center gap-3 rounded-md px-3 py-2 transition-all
-                   {{ request()->is('monitoring*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
-                            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 17v-2a2 2 0 012-2h2a2 2 0 012 2v2m-6 0h6m-6 0a2 2 0 01-2-2v-6a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2" />
-                            </svg>
-                            Monitoring
-                        </a>
-                    </li>
-
-                    {{-- Guide --}}
-                    <li>
-                        <a href="/guide"
-                            class="flex items-center gap-3 rounded-md px-3 py-2 transition-all
-                   {{ request()->is('guide*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
-                            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6l4 2m4-10H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2z" />
-                            </svg>
-                            Guide
-                        </a>
-                    </li>
                     {{-- User Management --}}
                     <li>
                         <details
@@ -147,17 +121,19 @@
                             </summary>
                             <ul>
                                 {{-- Users --}}
-                                <li>
-                                    <a href="{{ route('users.index') }}"
-                                        class="flex items-center gap-3 px-4 py-2 rounded-md transition-all
+                                @can('view.users')
+                                    <li>
+                                        <a href="{{ route('users.index') }}"
+                                            class="flex items-center gap-3 px-4 py-2 rounded-md transition-all
                     {{ request()->routeIs('users.*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
-                                        <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5.121 17.804A9.001 9.001 0 1118 20H6a1 1 0 01-.879-1.515z" />
-                                        </svg>
-                                        Users
-                                    </a>
-                                </li>
+                                            <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M5.121 17.804A9.001 9.001 0 1118 20H6a1 1 0 01-.879-1.515z" />
+                                            </svg>
+                                            Users
+                                        </a>
+                                    </li>
+                                @endcan
 
                                 {{-- Roles --}}
                                 <li>

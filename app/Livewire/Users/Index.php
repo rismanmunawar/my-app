@@ -1,31 +1,37 @@
 <?php
+
 namespace App\Livewire\Users;
 
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
-    public $users;
+    use WithPagination;
 
-    public function mount()
-    {
-        $this->loadUsers();
-    }
+    public $search = '';
 
-    public function loadUsers()
+    protected $paginationTheme = 'tailwind'; // gunakan Tailwind agar cocok dengan DaisyUI
+
+    public function updatingSearch()
     {
-        $this->users = User::with('roles')->latest()->get();
+        $this->resetPage();
     }
 
     public function delete($id)
     {
         User::findOrFail($id)->delete();
-        $this->loadUsers();
     }
 
     public function render()
     {
-        return view('livewire.users.index');
+        $users = User::with('roles')
+            ->where('name', 'like', '%' . $this->search . '%')
+            ->orWhere('email', 'like', '%' . $this->search . '%')
+            ->orderBy('created_at', 'desc')
+            ->paginate(2);
+
+        return view('livewire.users.index', compact('users'));
     }
 }

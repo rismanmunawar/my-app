@@ -66,10 +66,10 @@ class User extends Authenticatable
     }
 
     public function initials(): string
-{
-    $names = explode(' ', $this->name);
-    $initials = collect($names)->map(fn($n) => strtoupper($n[0]))->join('');
-    return substr($initials, 0, 2); // ambil 2 huruf awal saja
-}
+    {
+        $names = explode(' ', $this->name);
+        $initials = collect($names)->map(fn($n) => strtoupper($n[0]))->join('');
+        return substr($initials, 0, 2); // ambil 2 huruf awal saja
+    }
 
 }

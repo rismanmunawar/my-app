@@ -46,15 +46,16 @@
                         <td class="px-4 py-2">{{ $i + 1 }}</td>
                         <td class="px-4 py-2">{{ $role->name }}</td>
                         <td class="px-4 py-2">
-                            <div class="flex flex-wrap gap-1">
-                                @foreach ($role->permissions as $permission)
-                                    <span class="badge bg-gray-200 text-black">{{ $permission->name }}</span>
-                                @endforeach
-                            </div>
+                            <span class="badge badge-ghost badge-outline">
+                                {{ $role->permissions->count() }} permission
+                            </span>
                         </td>
+
                         <td class="px-4 py-2">
                             <div class="flex gap-2">
                                 <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-xs btn-warning">Edit</a>
+                                <a href="{{ route('roles.permissions', $role->id) }}" class="btn btn-xs btn-info">Kelola
+                                    Permission</a>
                                 <button
                                     onclick="confirm('Yakin ingin menghapus role ini?') || event.stopImmediatePropagation()"
                                     wire:click="delete({{ $role->id }})" class="btn btn-xs btn-outline btn-error">

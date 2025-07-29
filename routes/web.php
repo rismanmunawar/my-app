@@ -2,25 +2,31 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
+use App\Http\Controllers\PermissionController;
 use App\Livewire\Home\Index;
 use App\Livewire\Users\Index as UserIndex;
 use App\Livewire\Users\Create as UserCreate;
-use App\Livewire\Users\Edit as UserEdit;
+use App\Livewire\Users\Detail as UserDetail;
 use App\Livewire\Roles\Index as RoleIndex;
 use App\Livewire\Roles\Create as RoleCreate;
 use App\Livewire\Roles\Edit as RoleEdit;
 use App\Livewire\Permissions\Index as PermissionIndex;
 use App\Livewire\Permissions\Create as PermissionCreate;
 use App\Livewire\Permissions\Edit as PermissionEdit;
-// Route::get('/', function () {
-//     return view('welcome');
-// })->name('home');
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
-Route::get('/', Index::class)->name('home');
+// Route::get('/', Index::class)->name('welcome');
 
-Route::view('dashboard', 'dashboard')
+Route::view('home', 'home')
     ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    ->name('home');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', Index::class)->name('home');
+
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
@@ -31,10 +37,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/users', UserIndex::class)->name('users.index');
-    Route::get('/users/create', UserCreate::class)->name('users.create');
-    Route::get('/users/{id}/edit', UserEdit::class)->name('users.edit');
+    Route::get('/users', UserIndex::class)->middleware('can:view.users')->name('users.index');
+    Route::get('/users/create', UserCreate::class)->middleware('can:create.users')->name('users.create');
+    Route::get('/users/{user}/detail', UserDetail::class)->middleware('can:view.users')->name('users.detail');
 });
+
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/roles', RoleIndex::class)->name('roles.index');
@@ -44,10 +52,12 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::prefix('permissions')->name('permissions.')->group(function () {
-    Route::get('/', PermissionIndex::class)->name('index');
+    Route::get('/permisions', PermissionIndex::class)->name('index');
     Route::get('/create', PermissionCreate::class)->name('create');
     Route::get('/{id}/edit', PermissionEdit::class)->name('edit');
 });
+
+Route::get('/roles/{role}/permissions', \App\Livewire\Roles\AssignPermissions::class)->name('roles.permissions');
 
 require __DIR__.'/auth.php';
 
