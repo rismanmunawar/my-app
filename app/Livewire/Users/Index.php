@@ -30,7 +30,7 @@ class Index extends Component
             ->where('name', 'like', '%' . $this->search . '%')
             ->orWhere('email', 'like', '%' . $this->search . '%')
             ->orderBy('created_at', 'desc')
-            ->paginate(2);
+            ->paginate(10);
 
         return view('livewire.users.index', compact('users'));
     }

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ArticleImageUploadController;
 use App\Livewire\Home\Index;
 use App\Livewire\Users\Index as UserIndex;
 use App\Livewire\Users\Create as UserCreate;
@@ -13,6 +13,11 @@ use App\Livewire\Roles\Edit as RoleEdit;
 use App\Livewire\Permissions\Index as PermissionIndex;
 use App\Livewire\Permissions\Create as PermissionCreate;
 use App\Livewire\Permissions\Edit as PermissionEdit;
+use App\Livewire\Articles\Index as ArticleIndex;
+use App\Livewire\Articles\Create as ArticleCreate;
+use App\Livewire\Articles\Edit as ArticleEdit;
+use App\Livewire\Articles\Show as ArticleShow;
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -42,8 +47,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/{user}/detail', UserDetail::class)->middleware('can:view.users')->name('users.detail');
 });
 
-
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/roles', RoleIndex::class)->name('roles.index');
     Route::get('/roles/create', RoleCreate::class)->name('roles.create');
@@ -58,6 +61,19 @@ Route::prefix('permissions')->name('permissions.')->group(function () {
 });
 
 Route::get('/roles/{role}/permissions', \App\Livewire\Roles\AssignPermissions::class)->name('roles.permissions');
+
+Route::middleware(['auth'])->prefix('articles')->name('articles.')->group(function () {
+    Route::get('/', ArticleIndex::class)->name('index');
+    Route::get('/create', ArticleCreate::class)->name('create');
+    Route::get('/{article}/edit', ArticleEdit::class)->name('edit');
+    Route::get('/{article}', ArticleShow::class)->name('show');
+});
+
+// Pindahkan ke luar grup agar tidak double "articles"
+Route::post('/articles/upload-image', [ArticleImageUploadController::class, 'store'])
+    ->name('articles.upload-image');
+
+
 
 require __DIR__.'/auth.php';
 

@@ -9,6 +9,7 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
+    @stack('styles')
 </head>
 
 <body class="font-sans bg-gray-50">
@@ -107,6 +108,18 @@
                             Home
                         </a>
                     </li>
+                    {{-- Artikel Edukasi --}}
+                    <li>
+                        <a href="{{ route('articles.index') }}"
+                            class="flex items-center gap-3 rounded-md px-3 py-2 transition-all
+        {{ request()->routeIs('articles.*') ? 'bg-primary text-white font-semibold' : 'text-base-content hover:bg-white hover:text-black' }}">
+                            <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 11H5m14 0a2 2 0 100-4H5a2 2 0 100 4m14 0a2 2 0 100 4H5a2 2 0 100-4m14 0v6a2 2 0 01-2 2H7a2 2 0 01-2-2v-6" />
+                            </svg>
+                            Artikel Edukasi
+                        </a>
+                    </li>
 
                     {{-- User Management --}}
                     <li>
@@ -168,6 +181,7 @@
         </div>
     </div>
     @livewireScripts
+    @stack('scripts')
 </body>
 
 </html>
